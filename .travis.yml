@@ -1,0 +1,22 @@
+language: generic
+sudo: require
+services:
+  - docker
+
+before_install:
+  - docker build -t shubham/docker-react -f Dockerfile.dev .
+  
+script:
+  - docker run -e CI=true shubham/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-us-east-1-075187994357"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
